@@ -14,7 +14,7 @@ export const environment: IEnvironment = {
   env: {
     LOG_LEVEL: 'debug',
   },
-
+  clientBaseUrl: process.env.CLIENT_BASE_URL || 'http://localhost:4200',
   USER_PASSWORD_BCRYPT_SALT_ROUNDS: 12,
   JWT_SECRET: 'secretKey',
 

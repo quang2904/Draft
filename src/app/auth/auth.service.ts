@@ -1,16 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { User, UserService } from '../user';
-import * as bcrypt from 'bcrypt';
-
-// have to combine the two imports
 import { IUserRegistrationInput } from '@/contracts';
+import { SocialAuthService } from '@/auth';
+import { User, UserService } from '@/app/user';
 
 @Injectable()
-export class AuthService {
-  constructor(private readonly userService: UserService) {}
-
-  async getPasswordHash(password: string): Promise<string> {
-    return bcrypt.hash(password, 'cdscbndjcbdcjdbcj');
+export class AuthService extends SocialAuthService {
+  constructor(private readonly userService: UserService) {
+    super();
   }
 
   async register(input: IUserRegistrationInput): Promise<User> {

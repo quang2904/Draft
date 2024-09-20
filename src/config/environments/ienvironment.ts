@@ -1,5 +1,5 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { DefaultUser, CurrenciesEnum, DefaultValueDateTypeEnum } from '@/contracts';
+import { CurrenciesEnum, DefaultUser, DefaultValueDateTypeEnum } from '@/contracts';
 
 export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
@@ -8,6 +8,7 @@ export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
  */
 export interface Env {
   LOG_LEVEL?: LogLevel;
+
   [key: string]: string;
 }
 
@@ -19,7 +20,7 @@ export interface IEnvironment {
   envName: string;
 
   env?: Env;
-
+  clientBaseUrl: string;
   USER_PASSWORD_BCRYPT_SALT_ROUNDS?: number;
   JWT_SECRET?: string;
 
