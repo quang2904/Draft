@@ -1,9 +1,9 @@
-import { Controller, HttpStatus, Get, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { EmployeeSettingService } from './employee-setting.service';
 import { EmployeeSetting } from './employee-setting.entity';
 import { CrudController } from '../core/crud/crud.controller';
-import { IPagination } from '../core';
+import { IPagination } from '@/contracts';
 
 @ApiTags('EmployeeSetting')
 @Controller()

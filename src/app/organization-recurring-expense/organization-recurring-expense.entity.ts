@@ -1,11 +1,11 @@
 import { Column, Entity, Index } from 'typeorm';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsNumber, Min, Max, IsEnum } from 'class-validator';
-import { Base } from '../core/entities/base';
-import { OrganizationRecurringExpense as IOrganizationRecurringExpense, CurrenciesEnum } from '@/contracts';
+import { IsEnum, IsNotEmpty, IsNumber, IsString, Max, Min } from 'class-validator';
+import { BaseEntity } from '@/app/core/entities/internal';
+import { CurrenciesEnum, OrganizationRecurringExpense as IOrganizationRecurringExpense } from '@/contracts';
 
 @Entity('organization_recurring_expense')
-export class OrganizationRecurringExpense extends Base implements IOrganizationRecurringExpense {
+export class OrganizationRecurringExpense extends BaseEntity implements IOrganizationRecurringExpense {
   @ApiPropertyOptional({ type: String })
   @IsString()
   @IsNotEmpty()

@@ -1,17 +1,19 @@
-import { Controller, HttpStatus, Post, Body, Get, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Body, Controller, Get, HttpStatus, Post, Query } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ExpenseService } from './expense.service';
 import { Expense } from './expense.entity';
 import { CrudController } from '../core/crud/crud.controller';
 import { CommandBus } from '@nestjs/cqrs';
-import { ExpenseCreateInput as IExpenseCreateInput } from '@/contracts';
+import { ExpenseCreateInput as IExpenseCreateInput, IPagination } from '@/contracts';
 import { ExpenseCreateCommand } from './commands/expense.create.command';
-import { IPagination } from '../core';
 
 @ApiTags('Expense')
 @Controller()
 export class ExpenseController extends CrudController<Expense> {
-  constructor(private readonly expenseService: ExpenseService, private readonly commandBus: CommandBus) {
+  constructor(
+    private readonly expenseService: ExpenseService,
+    private readonly commandBus: CommandBus,
+  ) {
     super(expenseService);
   }
 

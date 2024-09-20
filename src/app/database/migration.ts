@@ -1,5 +1,5 @@
 import * as yargs from 'yargs';
-import { devConfig } from '../dev-config';
+import { devConfig } from '@/dev-config';
 import {
   createMigration,
   generateMigration,

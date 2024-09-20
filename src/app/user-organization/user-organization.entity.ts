@@ -1,11 +1,11 @@
-import { Entity, Index, Column } from 'typeorm';
-import { Base } from '../core/entities/base';
+import { Column, Entity, Index } from 'typeorm';
+import { BaseEntity } from '@/app/core/entities/internal';
 import { UserOrganization as IUserOrganization } from '@/contracts';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
 @Entity('user_organization')
-export class UserOrganization extends Base implements IUserOrganization {
+export class UserOrganization extends BaseEntity implements IUserOrganization {
   @ApiPropertyOptional({ type: String })
   @IsString()
   @IsNotEmpty()

@@ -1,13 +1,13 @@
-import { Column, Entity, Index, ManyToOne, RelationId, JoinColumn } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, RelationId } from 'typeorm';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, IsNumber, IsOptional, IsDate, IsEnum } from 'class-validator';
-import { Base } from '../core/entities/base';
-import { Expense as IExpense, CurrenciesEnum } from '@/contracts';
+import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { BaseEntity } from '@/app/core/entities/internal';
+import { CurrenciesEnum, Expense as IExpense } from '@/contracts';
 import { Organization } from '../organization';
 import { Employee } from '../employee';
 
 @Entity('expense')
-export class Expense extends Base implements IExpense {
+export class Expense extends BaseEntity implements IExpense {
   @ApiPropertyOptional({ type: Employee })
   @ManyToOne((type) => Employee, { nullable: true, onDelete: 'CASCADE' })
   @JoinColumn()

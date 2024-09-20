@@ -1,25 +1,17 @@
-// import * as csurf from 'csurf';
 import { ConflictException, INestApplication, Type } from '@nestjs/common';
-import { NestFactory, Reflector } from '@nestjs/core';
+import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
-import { SentryService } from '@ntegral/nestjs-sentry';
 import { useContainer } from 'class-validator';
-import expressSession from 'express-session';
 import helmet from 'helmet';
 import chalk from 'chalk';
-import { join } from 'path';
-import { urlencoded, json } from 'express';
+import { json, urlencoded } from 'express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { EntitySubscriberInterface } from 'typeorm';
-import { IPluginConfig } from 'common';
-import { getConfig, setConfig, environment as env } from 'config';
-import { getEntitiesFromPlugins } from 'plugin';
-import { coreEntities } from '../core/entities';
-import { coreSubscribers } from './../core/entities/subscribers';
-import { AppService } from '../app.service';
-import { AppModule } from '../app.module';
-import { AuthGuard } from './../shared/guards';
-import { SharedModule } from './../shared/shared.module';
+import { IPluginConfig } from '@/common';
+import { SharedModule } from '@/app/shared';
+import { getConfig, setConfig } from '@/config';
+import { join } from 'path';
+import { coreEntities } from '@/app/core/entities';
+import { getEntitiesFromPlugins } from '@/plugin';
 
 export async function bootstrap(pluginConfig?: Partial<IPluginConfig>): Promise<INestApplication> {
   const config = await registerPluginConfig(pluginConfig);
@@ -30,17 +22,6 @@ export async function bootstrap(pluginConfig?: Partial<IPluginConfig>): Promise<
   });
 
   // This will lock all routes and make them accessible by authenticated users only.
-  const reflector = app.get(Reflector);
-  app.useGlobalGuards(new AuthGuard(reflector));
-
-  // Assuming `env` contains the environment configuration, including Sentry DSN
-  const { sentry } = env;
-
-  // Initialize Sentry if the DSN is available
-  if (sentry && sentry.dsn) {
-    // Attach the Sentry logger to the app
-    app.useLogger(app.get(SentryService));
-  }
 
   app.use(json({ limit: '50mb' }));
   app.use(urlencoded({ extended: true, limit: '50mb' }));
@@ -53,25 +34,9 @@ export async function bootstrap(pluginConfig?: Partial<IPluginConfig>): Promise<
       'Authorization, Language, Tenant-Id, Organization-Id, X-Requested-With, X-Auth-Token, X-HTTP-Method-Override, Content-Type, Content-Language, Accept, Accept-Language, Observe',
   });
 
-  // TODO: enable csurf
-  // As explained on the csurf middleware page https://github.com/expressjs/csurf#csurf,
-  // the csurf module requires either a session middleware or cookie-parser to be initialized first.
-  // app.use(csurf());
-
-  app.use(
-    expressSession({
-      secret: env.EXPRESS_SESSION_SECRET,
-      resave: true,
-      saveUninitialized: true,
-    }),
-  );
-
   app.use(helmet());
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
-
-  const service = app.select(AppModule).get(AppService);
-  await service.seedDBIfEmpty();
 
   const options = new DocumentBuilder().setTitle('Gauzy API').setVersion('1.0').addBearerAuth().build();
 
@@ -107,18 +72,30 @@ export async function bootstrap(pluginConfig?: Partial<IPluginConfig>): Promise<
     if (process.send) {
       process.send(message);
     }
-    // Execute Seed For Demo Server
-    if (env.demo) {
-      service.executeDemoSeed();
-    }
   });
 
   return app;
 }
 
 /**
- * Setting the global config must be done prior to loading the Bootstrap Module.
+ * Returns an array of core entities and any additional entities defined in plugins.
  */
+export async function registerAllEntities(pluginConfig: Partial<IPluginConfig>) {
+  const allEntities = coreEntities as Array<Type<any>>;
+  const pluginEntities = getEntitiesFromPlugins(pluginConfig.plugins);
+
+  for (const pluginEntity of pluginEntities) {
+    if (allEntities.find((e) => e.name === pluginEntity.name)) {
+      throw new ConflictException({
+        message: `error.${pluginEntity.name} conflict by default entities`,
+      });
+    } else {
+      allEntities.push(pluginEntity);
+    }
+  }
+  return allEntities;
+}
+
 export async function registerPluginConfig(pluginConfig: Partial<IPluginConfig>) {
   if (Object.keys(pluginConfig).length > 0) {
     setConfig(pluginConfig);
@@ -142,31 +119,10 @@ export async function registerPluginConfig(pluginConfig: Partial<IPluginConfig>)
   setConfig({
     dbConnectionOptions: {
       entities,
-      subscribers: coreSubscribers as Array<Type<EntitySubscriberInterface>>,
     },
   });
 
-  let registeredConfig = getConfig();
-  return registeredConfig;
-}
-
-/**
- * Returns an array of core entities and any additional entities defined in plugins.
- */
-export async function registerAllEntities(pluginConfig: Partial<IPluginConfig>) {
-  const allEntities = coreEntities as Array<Type<any>>;
-  const pluginEntities = getEntitiesFromPlugins(pluginConfig.plugins);
-
-  for (const pluginEntity of pluginEntities) {
-    if (allEntities.find((e) => e.name === pluginEntity.name)) {
-      throw new ConflictException({
-        message: `error.${pluginEntity.name} conflict by default entities`,
-      });
-    } else {
-      allEntities.push(pluginEntity);
-    }
-  }
-  return allEntities;
+  return getConfig();
 }
 
 /**
@@ -177,7 +133,6 @@ export async function registerAllEntities(pluginConfig: Partial<IPluginConfig>) 
 export function getMigrationsSetting() {
   console.log(`Reporting __dirname: ${__dirname}`);
 
-  //TODO: We need to define some dynamic path here
   return {
     migrations: [
       // join(__dirname, '../../src/database/migrations/*{.ts,.js}'),

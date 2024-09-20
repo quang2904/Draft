@@ -1,17 +1,19 @@
-import { Controller, HttpStatus, Post, Body, Get, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Body, Controller, Get, HttpStatus, Post, Query } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { IncomeService } from './income.service';
 import { Income } from './income.entity';
 import { CrudController } from '../core/crud/crud.controller';
-import { IncomeCreateInput as IIncomeCreateInput } from '@/contracts';
+import { IncomeCreateInput as IIncomeCreateInput, IPagination } from '@/contracts';
 import { CommandBus } from '@nestjs/cqrs';
 import { IncomeCreateCommand } from './commands/income.create.command';
-import { IPagination } from '../core';
 
 @ApiTags('Income')
 @Controller()
 export class IncomeController extends CrudController<Income> {
-  constructor(private readonly incomeService: IncomeService, private readonly commandBus: CommandBus) {
+  constructor(
+    private readonly incomeService: IncomeService,
+    private readonly commandBus: CommandBus,
+  ) {
     super(incomeService);
   }
 

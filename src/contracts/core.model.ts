@@ -5,7 +5,7 @@ export interface IPagination<T> {
   /**
    * Items included in the current listing
    */
-  readonly items: [];
+  readonly items: T[];
 
   /**
    * Total number of available items

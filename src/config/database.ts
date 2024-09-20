@@ -1,8 +1,5 @@
-import * as path from 'path';
 import chalk from 'chalk';
 import { TlsOptions } from 'tls';
-import { TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { DataSourceOptions } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
 let dbType: string;
@@ -15,88 +12,35 @@ console.log(`Selected DB Type (DB_TYPE env var): ${dbType}`);
 // `process` is a built-in global in Node.js, no need to `require()`
 console.log(chalk.magenta(`Currently running Node.js version %s`), process.version);
 
-let connectionConfig: TypeOrmModuleOptions;
+const ssl = process.env.DB_SSL_MODE === 'true' ? true : undefined;
 
-switch (dbType) {
-  case 'mongodb':
-    throw 'MongoDB not supported yet';
+let sslParams: TlsOptions;
 
-  case 'postgres':
-    const ssl = process.env.DB_SSL_MODE === 'true' ? true : undefined;
+if (ssl) {
+  const base64data = process.env.DB_CA_CERT;
+  const buff = Buffer.from(base64data, 'base64');
+  const sslCert = buff.toString('ascii');
 
-    let sslParams: TlsOptions;
-
-    if (ssl) {
-      const base64data = process.env.DB_CA_CERT;
-      const buff = Buffer.from(base64data, 'base64');
-      const sslCert = buff.toString('ascii');
-
-      sslParams = {
-        rejectUnauthorized: true,
-        ca: sslCert,
-      };
-    }
-
-    const postgresConnectionOptions: PostgresConnectionOptions = {
-      type: dbType,
-      ssl: ssl ? sslParams : undefined,
-      host: process.env.DB_HOST || 'localhost',
-      username: process.env.DB_USER || 'postgres',
-      password: process.env.DB_PASS || 'root',
-      database: process.env.DB_NAME || 'postgres',
-      port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 5432,
-      logging: 'all',
-      logger: 'file', // Removes console logging, instead logs all queries in a file ormlogs.log
-      synchronize: process.env.DB_SYNCHRONIZE === 'true' ? true : false, // We are using migrations, synchronize should be set to false.
-      uuidExtension: 'pgcrypto',
-      migrations: ['src/modules/not-exists/*.migration{.ts,.js}'],
-      entities: ['src/modules/not-exists/*.entity{.ts,.js}'],
-    };
-
-    connectionConfig = postgresConnectionOptions;
-
-    break;
-
-  case 'sqlite':
-    const dbPath = process.env.DB_PATH || path.join(process.cwd(), ...['apps', 'api', 'data'], 'gauzy.sqlite3');
-
-    console.log('Sqlite DB Path: ' + dbPath);
-
-    const sqliteConfig: DataSourceOptions = {
-      type: dbType,
-      database: dbPath,
-      logging: 'all',
-      logger: 'file', //Removes console logging, instead logs all queries in a file ormlogs.log
-      synchronize: process.env.DB_SYNCHRONIZE === 'true' ? true : false, // We are using migrations, synchronize should be set to false.
-    };
-
-    connectionConfig = sqliteConfig;
-
-    break;
-
-  case 'better-sqlite3':
-    const betterSqlitePath =
-      process.env.DB_PATH || path.join(process.cwd(), ...['apps', 'api', 'data'], 'gauzy.sqlite3');
-
-    console.log('Better Sqlite DB Path: ' + betterSqlitePath);
-
-    const betterSqliteConfig: DataSourceOptions = {
-      type: dbType,
-      database: betterSqlitePath,
-      logging: 'all',
-      logger: 'file', // Removes console logging, instead logs all queries in a file ormlogs.log
-      synchronize: process.env.DB_SYNCHRONIZE === 'true', // We are using migrations, synchronize should be set to false.
-      prepareDatabase: (db) => {
-        if (!process.env.IS_ELECTRON) {
-          // Enhance performance
-          db.pragma('journal_mode = WAL');
-        }
-      },
-    };
-
-    connectionConfig = betterSqliteConfig;
-
-    break;
+  sslParams = {
+    rejectUnauthorized: true,
+    ca: sslCert,
+  };
 }
 
-export const dbConnectionConfig = connectionConfig;
+const postgresConnectionOptions: PostgresConnectionOptions = {
+  type: 'postgres',
+  ssl: ssl ? sslParams : undefined,
+  host: process.env.DB_HOST || 'localhost',
+  username: process.env.DB_USER || 'postgres',
+  password: process.env.DB_PASS || 'postgres',
+  database: process.env.DB_NAME || 'draft',
+  port: process.env.DB_PORT ? parseInt(process.env.DB_PORT, 10) : 5432,
+  logging: 'all',
+  logger: 'file', // Removes console logging, instead logs all queries in a file ormlogs.log
+  synchronize: true,
+  uuidExtension: 'pgcrypto',
+  migrations: ['src/app/*.migration{.ts,.js}'],
+  entities: ['src/app/*.entity{.ts,.js}'],
+};
+
+export const dbConnectionConfig = postgresConnectionOptions;

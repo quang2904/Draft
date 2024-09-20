@@ -1,20 +1,10 @@
 import { MiddlewareConsumer, Module, NestModule, OnApplicationShutdown } from '@nestjs/common';
-import { ConfigModule, getConfig } from 'config';
-import { PluginModule } from 'plugin';
-import { AppModule } from './../app.module';
-import { HealthIndicatorModule } from '../health-indicator';
-import { Logger, LoggerModule } from '../logger';
-import { SharedModule } from './../shared/shared.module';
+import { ConfigModule } from '@/config';
+import { AppModule } from '@/app/app.module';
+import { SharedModule } from '@/app/shared';
 
 @Module({
-  imports: [
-    ConfigModule,
-    AppModule,
-    LoggerModule.forRoot(),
-    PluginModule.forRoot(getConfig()),
-    HealthIndicatorModule,
-    SharedModule,
-  ],
+  imports: [ConfigModule, AppModule, SharedModule],
 })
 export class BootstrapModule implements NestModule, OnApplicationShutdown {
   constructor() {}
@@ -25,7 +15,7 @@ export class BootstrapModule implements NestModule, OnApplicationShutdown {
 
   async onApplicationShutdown(signal: string) {
     if (signal) {
-      Logger.log(`Received shutdown signal: ${signal}`);
+      console.log(`Received shutdown signal: ${signal}`);
     }
   }
 }

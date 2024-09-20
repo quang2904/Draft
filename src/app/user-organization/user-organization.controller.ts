@@ -1,9 +1,8 @@
-import { Controller, HttpStatus, Get, Query } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CrudController } from '../core/crud/crud.controller';
 import { UserOrganization as IUserOrganization } from '@/contracts';
 import { UserOrganizationService } from './user-organization.services';
-import { IPagination } from '../core';
 import { UserOrganization } from './user-organization.entity';
 
 @ApiTags('UserOrganization')

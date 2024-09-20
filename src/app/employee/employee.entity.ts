@@ -1,13 +1,13 @@
-import { Entity, Column, JoinColumn, OneToOne, RelationId, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, RelationId } from 'typeorm';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Base } from '../core/entities/base';
+import { BaseEntity } from '@/app/core/entities/internal';
 import { Employee as IEmployee } from '@/contracts';
 import { IsDate, IsOptional } from 'class-validator';
 import { User } from '../user';
 import { Organization } from '../organization';
 
 @Entity('employee')
-export class Employee extends Base implements IEmployee {
+export class Employee extends BaseEntity implements IEmployee {
   @ApiPropertyOptional({ type: User })
   @OneToOne((type) => User, { nullable: false, onDelete: 'CASCADE' })
   @JoinColumn()

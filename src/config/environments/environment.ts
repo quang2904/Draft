@@ -1,8 +1,11 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build ---prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
+import * as dotenv from 'dotenv'; // see https://github.com/motdotla/dotenv#how-do-i-use-dotenv-with-import
 import { IEnvironment } from './ienvironment';
 import { CurrenciesEnum, DefaultValueDateTypeEnum } from '@/contracts';
+
+dotenv.config();
 
 export const environment: IEnvironment = {
   production: false,

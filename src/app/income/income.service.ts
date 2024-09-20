@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindManyOptions } from 'typeorm';
+import { FindManyOptions, Repository } from 'typeorm';
 import { Income } from './income.entity';
 import { CrudService } from '../core/crud/crud.service';
-import { IPagination } from '../core';
+import { IPagination } from '@/contracts';
 
 @Injectable()
 export class IncomeService extends CrudService<Income> {

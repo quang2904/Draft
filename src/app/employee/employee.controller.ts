@@ -1,17 +1,19 @@
-import { Controller, HttpStatus, Get, Query, Post, Body, Param } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { Body, Controller, Get, HttpStatus, Param, Post, Query } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { EmployeeService } from './employee.service';
 import { Employee } from './employee.entity';
 import { CrudController } from '../core/crud/crud.controller';
-import { IPagination } from '../core';
-import { EmployeeCreateInput as IEmployeeCreateInput } from '@/contracts';
+import { EmployeeCreateInput as IEmployeeCreateInput, IPagination } from '@/contracts';
 import { CommandBus } from '@nestjs/cqrs';
 import { EmployeeCreateCommand } from './commands';
 
 @ApiTags('Employee')
 @Controller()
 export class EmployeeController extends CrudController<Employee> {
-  constructor(private readonly employeeService: EmployeeService, private readonly commandBus: CommandBus) {
+  constructor(
+    private readonly employeeService: EmployeeService,
+    private readonly commandBus: CommandBus,
+  ) {
     super(employeeService);
   }
 

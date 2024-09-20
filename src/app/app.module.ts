@@ -1,60 +1,42 @@
 import { Module } from '@nestjs/common';
-import { RouterModule } from 'nest-router';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { UserModule } from './user';
-import { EmployeeModule } from './employee';
-import { RoleModule } from './role';
-import { OrganizationModule } from './organization';
-import { IncomeModule } from './income';
-import { ExpenseModule } from './expense';
-import { EmployeeSettingModule } from './employee-setting';
-import { CoreModule } from './core';
-import { AuthModule } from './auth';
-import { UserOrganizationModule } from './user-organization';
-import { EmployeeStatisticsModule } from './employee-statistics';
-import { OrganizationDepartmentModule } from './organization-department';
-import { OrganizationRecurringExpenseModule } from './organization-recurring-expense';
-import { EmployeeRecurringExpenseModule } from './employee-recurring-expense';
+import { MulterModule } from '@nestjs/platform-express';
+import { AppService } from '@/app/app.service';
+import { AppController } from '@/app/app.controller';
+import { CoreModule } from '@/app/core';
+import { EmployeeModule } from '@/app/employee';
+import { EmployeeRecurringExpenseModule } from '@/app/employee-recurring-expense';
+import { EmployeeSettingModule } from '@/app/employee-setting';
+import { EmployeeStatisticsModule } from '@/app/employee-statistics';
+import { ExpenseModule } from '@/app/expense';
+import { IncomeModule } from '@/app/income';
+import { OrganizationModule } from '@/app/organization';
+import { OrganizationDepartmentModule } from '@/app/organization-department';
+import { OrganizationRecurringExpenseModule } from '@/app/organization-recurring-expense';
+import { RoleModule } from '@/app/role';
+import { UserModule } from '@/app/user';
+import { UserOrganizationModule } from '@/app/user-organization';
 
 @Module({
   imports: [
-    RouterModule.forRoutes([
-      {
-        path: '',
-        children: [
-          { path: '/auth', module: AuthModule },
-          { path: '/user', module: UserModule },
-          { path: '/role', module: RoleModule },
-          { path: '/organization', module: OrganizationModule },
-          { path: '/income', module: IncomeModule },
-          { path: '/expense', module: ExpenseModule },
-          { path: '/employee', module: EmployeeModule },
-          { path: '/employee-settings', module: EmployeeSettingModule },
-          { path: '/employee-statistics', module: EmployeeStatisticsModule },
-          { path: '/user-organization', module: UserOrganizationModule },
-          { path: '/organization-department', module: OrganizationDepartmentModule },
-          { path: '/organization-recurring-expense', module: OrganizationRecurringExpenseModule },
-          { path: '/employee-recurring-expense', module: EmployeeRecurringExpenseModule },
-        ],
-      },
-    ]),
+    MulterModule.register(),
     CoreModule,
-    AuthModule,
-    UserModule,
     EmployeeModule,
+    EmployeeRecurringExpenseModule,
     EmployeeSettingModule,
     EmployeeStatisticsModule,
-    RoleModule,
-    OrganizationModule,
-    IncomeModule,
     ExpenseModule,
-    UserOrganizationModule,
+    IncomeModule,
+    OrganizationModule,
     OrganizationDepartmentModule,
     OrganizationRecurringExpenseModule,
-    EmployeeRecurringExpenseModule,
+    RoleModule,
+    UserModule,
+    UserOrganizationModule,
   ],
   controllers: [AppController],
   providers: [AppService],
+  exports: [],
 })
-export class AppModule {}
+export class AppModule {
+  constructor() {}
+}

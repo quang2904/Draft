@@ -1,12 +1,12 @@
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsString } from 'class-validator';
-import { Base } from '../core/entities/base';
+import { BaseEntity } from '@/app/core/entities/internal';
 import { Organization } from '../organization/organization.entity';
 import { OrganizationDepartment as IOrganizationDepartment } from '@/contracts';
 
 @Entity('organization_department')
-export class OrganizationDepartment extends Base implements IOrganizationDepartment {
+export class OrganizationDepartment extends BaseEntity implements IOrganizationDepartment {
   @ApiPropertyOptional({ type: String })
   @IsString()
   @IsNotEmpty()

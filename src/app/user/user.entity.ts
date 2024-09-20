@@ -1,12 +1,12 @@
-import { Column, Entity, Index, ManyToOne, RelationId, JoinColumn } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, RelationId } from 'typeorm';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsAscii, IsEmail, IsNotEmpty, IsString, MaxLength, MinLength, IsOptional } from 'class-validator';
-import { Base } from '../core/entities/base';
+import { IsAscii, IsEmail, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { BaseEntity } from '@/app/core/entities/internal';
 import { User as IUser } from '@/contracts';
 import { Role } from '../role';
 
 @Entity('user')
-export class User extends Base implements IUser {
+export class User extends BaseEntity implements IUser {
   @ApiPropertyOptional({ type: String })
   @IsString()
   @Index()
