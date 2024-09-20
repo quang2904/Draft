@@ -1,4 +1,4 @@
-import { Column, Entity, Index } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty, IsNumber, IsString, Max, Min } from 'class-validator';
 import { BaseEntity } from '@/app/core/entities/internal';
@@ -9,7 +9,6 @@ export class EmployeeRecurringExpense extends BaseEntity implements IEmployeeRec
   @ApiPropertyOptional({ type: String })
   @IsString()
   @IsNotEmpty()
-  @Index()
   @Column()
   employeeId: string;
 
@@ -31,7 +30,6 @@ export class EmployeeRecurringExpense extends BaseEntity implements IEmployeeRec
   @ApiPropertyOptional({ type: String })
   @IsString()
   @IsNotEmpty()
-  @Index()
   @Column()
   categoryName: string;
 
@@ -44,7 +42,6 @@ export class EmployeeRecurringExpense extends BaseEntity implements IEmployeeRec
   @ApiPropertyOptional({ type: String, enum: CurrenciesEnum })
   @IsEnum(CurrenciesEnum)
   @IsNotEmpty()
-  @Index()
   @Column()
   currency: string;
 }

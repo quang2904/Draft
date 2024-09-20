@@ -1,4 +1,4 @@
-import { Column, Entity, Index } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsNotEmpty } from 'class-validator';
 import { BaseEntity } from '@/app/core/entities/internal';
@@ -9,7 +9,6 @@ export class Role extends BaseEntity implements IRole {
   @ApiPropertyOptional({ type: String, enum: RolesEnum })
   @IsEnum(RolesEnum)
   @IsNotEmpty()
-  @Index()
   @Column()
   name: string;
 }

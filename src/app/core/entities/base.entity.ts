@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, DeleteDateColumn, Index, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { BaseEntityModel as IBaseEntityModel } from '@/contracts';
 import { IsBoolean, IsDateString, IsOptional } from 'class-validator';
@@ -54,7 +54,6 @@ export abstract class BaseEntity extends Model implements IBaseEntityModel {
   })
   @IsOptional()
   @IsBoolean()
-  @Index()
   @Column({ nullable: true, default: true })
   isActive?: boolean;
 
@@ -65,7 +64,6 @@ export abstract class BaseEntity extends Model implements IBaseEntityModel {
   })
   @IsOptional()
   @IsBoolean()
-  @Index()
   @Column({ nullable: true, default: false })
   isArchived?: boolean;
 }

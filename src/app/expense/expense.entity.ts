@@ -1,4 +1,4 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne, RelationId } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, RelationId } from 'typeorm';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsDate, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 import { BaseEntity } from '@/app/core/entities/internal';
@@ -30,19 +30,16 @@ export class Expense extends BaseEntity implements IExpense {
   @ApiPropertyOptional({ type: Number })
   @IsNumber()
   @IsNotEmpty()
-  @Index()
   @Column()
   amount: number;
 
   @ApiPropertyOptional({ type: String })
   @IsString()
   @IsNotEmpty()
-  @Index()
   @Column()
   vendorName: string;
 
   @ApiPropertyOptional({ type: String })
-  @Index()
   @IsOptional()
   @Column({ nullable: true })
   vendorId?: string;
@@ -50,18 +47,15 @@ export class Expense extends BaseEntity implements IExpense {
   @ApiPropertyOptional({ type: String })
   @IsString()
   @IsNotEmpty()
-  @Index()
   @Column()
   categoryName: string;
 
   @ApiPropertyOptional({ type: String })
-  @Index()
   @IsOptional()
   @Column({ nullable: true })
   categoryId?: string;
 
   @ApiPropertyOptional({ type: String })
-  @Index()
   @IsOptional()
   @Column({ nullable: true })
   notes?: string;
@@ -69,7 +63,6 @@ export class Expense extends BaseEntity implements IExpense {
   @ApiPropertyOptional({ type: String, enum: CurrenciesEnum })
   @IsEnum(CurrenciesEnum)
   @IsNotEmpty()
-  @Index()
   @Column()
   currency: string;
 

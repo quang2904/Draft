@@ -1,4 +1,4 @@
-import { Column, Entity, Index } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsDate, IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { BaseEntity } from '@/app/core/entities/internal';
@@ -9,7 +9,6 @@ export class Organization extends BaseEntity implements IOrganization {
   @ApiPropertyOptional({ type: String })
   @IsString()
   @IsNotEmpty()
-  @Index()
   @Column()
   name: string;
 
@@ -21,7 +20,6 @@ export class Organization extends BaseEntity implements IOrganization {
   @ApiPropertyOptional({ type: String, enum: CurrenciesEnum })
   @IsEnum(CurrenciesEnum)
   @IsNotEmpty()
-  @Index()
   @Column()
   currency: string;
 
@@ -34,7 +32,6 @@ export class Organization extends BaseEntity implements IOrganization {
   @ApiPropertyOptional({ type: String, enum: DefaultValueDateTypeEnum })
   @IsEnum(DefaultValueDateTypeEnum)
   @IsNotEmpty()
-  @Index()
   @Column()
   defaultValueDateType: string;
 }

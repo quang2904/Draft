@@ -1,4 +1,4 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne, RelationId } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, RelationId } from 'typeorm';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsAscii, IsEmail, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { BaseEntity } from '@/app/core/entities/internal';
@@ -9,21 +9,18 @@ import { Role } from '../role';
 export class User extends BaseEntity implements IUser {
   @ApiPropertyOptional({ type: String })
   @IsString()
-  @Index()
   @IsOptional()
   @Column({ nullable: true })
   thirdPartyId?: string;
 
   @ApiPropertyOptional({ type: String })
   @IsString()
-  @Index()
   @IsOptional()
   @Column({ nullable: true })
   firstName?: string;
 
   @ApiPropertyOptional({ type: String })
   @IsString()
-  @Index()
   @IsOptional()
   @Column({ nullable: true })
   lastName?: string;
@@ -31,7 +28,6 @@ export class User extends BaseEntity implements IUser {
   @ApiPropertyOptional({ type: String, minLength: 3, maxLength: 100 })
   @IsEmail()
   @IsNotEmpty()
-  @Index({ unique: true })
   @IsOptional()
   @Column({ nullable: true })
   email?: string;
@@ -40,7 +36,6 @@ export class User extends BaseEntity implements IUser {
   @IsAscii()
   @MinLength(3)
   @MaxLength(20)
-  @Index({ unique: true })
   @IsOptional()
   @Column({ nullable: true })
   username?: string;
