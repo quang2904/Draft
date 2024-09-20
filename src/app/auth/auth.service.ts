@@ -1,39 +1,20 @@
-import { Injectable, /*Provider, */ InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { User, UserService } from '../user';
 import * as bcrypt from 'bcrypt';
-import { environment as env } from '@/config';
 
 // have to combine the two imports
-import { JsonWebTokenError, sign, verify } from 'jsonwebtoken';
-import { UserRegistrationInput as IUserRegistrationInput } from '@/contracts';
-
-export enum Provider {
-  GOOGLE = 'google',
-}
+import { IUserRegistrationInput } from '@/contracts';
 
 @Injectable()
 export class AuthService {
-  saltRounds: number;
-
-  constructor(private readonly userService: UserService) {
-    this.saltRounds = env.USER_PASSWORD_BCRYPT_SALT_ROUNDS;
-  }
+  constructor(private readonly userService: UserService) {}
 
   async getPasswordHash(password: string): Promise<string> {
-    return bcrypt.hash(password, this.saltRounds);
-  }
-
-  async login(findObj: any, password: string): Promise<{ user: User; token: string } | null> {
-    const user = null;
-    const token = '';
-    return {
-      user,
-      token,
-    };
+    return bcrypt.hash(password, 'cdscbndjcbdcjdbcj');
   }
 
   async register(input: IUserRegistrationInput): Promise<User> {
-    const user = this.userService.create({
+    return this.userService.create({
       ...input.user,
       ...(input.password
         ? {
@@ -41,79 +22,5 @@ export class AuthService {
           }
         : {}),
     });
-
-    return user;
-  }
-
-  async isAuthenticated(token: string): Promise<boolean> {
-    try {
-      const { id, thirdPartyId } = verify(token, env.JWT_SECRET) as {
-        id: string;
-        thirdPartyId: string;
-      };
-
-      let result: Promise<boolean>;
-
-      if (thirdPartyId) {
-        result = this.userService.checkIfExistsThirdParty(thirdPartyId);
-      } else {
-        result = this.userService.checkIfExists(id);
-      }
-
-      return result;
-    } catch (err) {
-      if (err instanceof JsonWebTokenError) {
-        return false;
-      } else {
-        throw err;
-      }
-    }
-  }
-
-  async hasRole(token: string, roles: string[] = []): Promise<boolean> {
-    try {
-      const { id, role } = verify(token, env.JWT_SECRET) as {
-        id: string;
-        role: string;
-      };
-
-      return role ? roles.includes(role) : false;
-    } catch (err) {
-      if (err instanceof JsonWebTokenError) {
-        return false;
-      } else {
-        throw err;
-      }
-    }
-  }
-
-  async validateOAuthLogin(
-    thirdPartyId: string,
-    provider: Provider,
-    user: User,
-  ): Promise<{ jwt: string; userId: string }> {
-    try {
-      const userExist = await this.isUserExist(thirdPartyId);
-      if (!userExist) {
-        await this.userService.createOne(user);
-      }
-
-      const userId = await this.getUserId(thirdPartyId);
-      const payload = { thirdPartyId, provider };
-      const jwt: string = sign(payload, env.JWT_SECRET, {});
-
-      return { jwt, userId };
-    } catch (err) {
-      throw new InternalServerErrorException('validateOAuthLogin', err.message);
-    }
-  }
-
-  private async getUserId(userThirdPartyProviderId: string): Promise<string> {
-    return null;
-  }
-
-  private async isUserExist(userThirdPartyProviderId: string): Promise<boolean> {
-    const success = await this.userService.checkIfExistsThirdParty(userThirdPartyProviderId);
-    return success;
   }
 }

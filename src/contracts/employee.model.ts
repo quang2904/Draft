@@ -1,11 +1,11 @@
-import { User } from './';
+import { IUser } from './';
 import { Organization, OrganizationFindInput } from './organization.model';
 import { BaseEntityModel as IBaseEntityModel } from './base-entity.model';
 import { UserFindInput } from './user.model';
 
 export interface Employee extends IBaseEntityModel {
   endWork?: any;
-  user: User;
+  user: IUser;
   userId: string;
   organization: Organization;
   orgId: string;
@@ -21,6 +21,6 @@ export interface EmployeeFindInput extends IBaseEntityModel {
 }
 
 export interface EmployeeCreateInput {
-  user: User;
+  user: IUser;
   organization: Organization;
 }

@@ -1,17 +1,15 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserService, User } from '../user';
+import { User, UserService } from '@/app/user';
 import { AuthService } from './auth.service';
-import { CommandHandlers } from './commands/handlers';
 import { CqrsModule } from '@nestjs/cqrs';
-import { RoleService, Role } from '../role';
-import { GoogleStrategy } from './google.strategy';
+import { RoleModule } from '@/app/role';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Role]), CqrsModule],
+  imports: [forwardRef(() => TypeOrmModule.forFeature([User])), forwardRef(() => RoleModule), CqrsModule],
   controllers: [AuthController],
-  providers: [AuthService, UserService, RoleService, ...CommandHandlers, GoogleStrategy],
+  providers: [AuthService, UserService],
   exports: [AuthService],
 })
 export class AuthModule {}

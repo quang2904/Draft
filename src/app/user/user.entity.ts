@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne, RelationId } from 'typeorm';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsAscii, IsEmail, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { BaseEntity } from '@/app/core/entities/internal';
-import { User as IUser } from '@/contracts';
+import { IUser } from '@/contracts';
 import { Role } from '../role';
 
 @Entity('user')

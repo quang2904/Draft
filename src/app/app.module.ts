@@ -15,11 +15,13 @@ import { OrganizationRecurringExpenseModule } from '@/app/organization-recurring
 import { RoleModule } from '@/app/role';
 import { UserModule } from '@/app/user';
 import { UserOrganizationModule } from '@/app/user-organization';
+import { AuthModule } from '@/app/auth';
 
 @Module({
   imports: [
     MulterModule.register(),
     CoreModule,
+    AuthModule,
     EmployeeModule,
     EmployeeRecurringExpenseModule,
     EmployeeSettingModule,

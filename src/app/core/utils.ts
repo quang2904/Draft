@@ -1,5 +1,5 @@
 import { sample } from 'lodash';
-import { User as IUser } from '@/contracts';
+import { IUser } from '@/contracts';
 
 namespace Utils {
   export function generatedLogoColor() {

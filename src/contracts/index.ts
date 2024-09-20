@@ -10,6 +10,6 @@ export * from './employee-statistics.model';
 export * from './organization-department.model';
 export * from './organization-recurring-expense';
 export * from './employee-recurring-expense';
-export { Role, RolesEnum } from './role.model';
+export * from './role.model';
 export { BaseEntityModel } from './base-entity.model';
 export { DefaultUser } from './default-user.model';

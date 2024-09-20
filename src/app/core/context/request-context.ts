@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
 import * as cls from 'cls-hooked';
-import { User } from '@/contracts';
+import { IUser } from '@/contracts';
 import { ExtractJwt } from 'passport-jwt';
 
 export class RequestContext {
@@ -33,12 +33,12 @@ export class RequestContext {
     return null;
   }
 
-  static currentUser(throwError?: boolean): User {
+  static currentUser(throwError?: boolean): IUser {
     const requestContext = RequestContext.currentRequestContext();
 
     if (requestContext) {
       // tslint:disable-next-line
-      const user: User = requestContext.request['user'];
+      const user: IUser = requestContext.request['user'];
       if (user) {
         return user;
       }
