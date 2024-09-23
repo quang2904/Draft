@@ -1,15 +1,12 @@
-export * from './user.model';
+// core model
 export * from './core.model';
-export * from './employee.model';
-export * from './organization.model';
-export * from './income.model';
-export * from './expense.model';
-export * from './user-organization.model';
-export * from './employee-settings.model';
-export * from './employee-statistics.model';
-export * from './organization-department.model';
-export * from './organization-recurring-expense';
-export * from './employee-recurring-expense';
+export * from './base-entity.model';
+export * from './default-user.model';
+
+// entities model
+export * from './tenant.model';
+export * from './user.model';
 export * from './role.model';
-export { BaseEntityModel } from './base-entity.model';
-export { DefaultUser } from './default-user.model';
+export * from './role-permission.model';
+export * from './currency.model';
+export * from './organization.model';

@@ -1,14 +1,14 @@
-import { Role } from './role.entity';
+import { Tenant } from './tenant.entity';
 import { Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CrudService } from '@/app/core';
 
 @Injectable()
-export class RoleService extends CrudService<Role> {
+export class TenantService extends CrudService<Tenant> {
   constructor(
-    @InjectRepository(Role)
-    private readonly tenantRepository: Repository<Role>,
+    @InjectRepository(Tenant)
+    private readonly tenantRepository: Repository<Tenant>,
   ) {
     super(tenantRepository);
   }

@@ -1,63 +1,126 @@
-import { Column, Entity, JoinColumn, ManyToOne, RelationId } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, ManyToOne, RelationId } from 'typeorm';
+import { IRole, IUser } from '@/contracts';
+import { BaseEntity, Role } from '@/app/core/entities/internal';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsAscii, IsEmail, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
-import { BaseEntity } from '@/app/core/entities/internal';
-import { IUser } from '@/contracts';
-import { Role } from '../role';
+import { IsEmail, IsOptional, IsString, IsUUID } from 'class-validator';
+import { Exclude } from 'class-transformer';
 
 @Entity('user')
 export class User extends BaseEntity implements IUser {
-  @ApiPropertyOptional({ type: String })
-  @IsString()
+  @ApiPropertyOptional({ type: () => String })
   @IsOptional()
+  @IsString()
+  @Index()
   @Column({ nullable: true })
   thirdPartyId?: string;
 
-  @ApiPropertyOptional({ type: String })
-  @IsString()
+  @ApiPropertyOptional({ type: () => String })
   @IsOptional()
+  @IsString()
+  @Index()
   @Column({ nullable: true })
   firstName?: string;
 
-  @ApiPropertyOptional({ type: String })
-  @IsString()
+  @ApiPropertyOptional({ type: () => String })
   @IsOptional()
+  @IsString()
+  @Index()
   @Column({ nullable: true })
   lastName?: string;
 
-  @ApiPropertyOptional({ type: String, minLength: 3, maxLength: 100 })
-  @IsEmail()
-  @IsNotEmpty()
+  @ApiPropertyOptional({ type: () => String, minLength: 3, maxLength: 100 })
   @IsOptional()
+  @IsEmail()
+  @Index({ unique: false })
   @Column({ nullable: true })
   email?: string;
 
-  @ApiPropertyOptional({ type: String, minLength: 3, maxLength: 20 })
-  @IsAscii()
-  @MinLength(3)
-  @MaxLength(20)
+  @ApiPropertyOptional({ type: () => String, minLength: 4, maxLength: 12 })
   @IsOptional()
+  @IsString()
+  @Index()
+  @Column({ nullable: true })
+  phoneNumber?: string;
+
+  @ApiPropertyOptional({ type: () => String, minLength: 3, maxLength: 20 })
+  @IsOptional()
+  @IsString()
+  @Index({ unique: false })
   @Column({ nullable: true })
   username?: string;
 
-  @ApiPropertyOptional({ type: Role })
-  @ManyToOne((type) => Role, { nullable: true, onDelete: 'CASCADE' })
-  @JoinColumn()
-  role?: Role;
-
-  @ApiPropertyOptional({ type: String, readOnly: true })
-  @RelationId((user: User) => user.role)
-  readonly roleId?: string;
-
-  @ApiPropertyOptional({ type: String })
-  @IsString()
-  @Column()
+  @ApiPropertyOptional({ type: () => String })
   @IsOptional()
+  @IsString()
+  @Column({ nullable: true })
+  timeZone?: string;
+
+  @ApiPropertyOptional({ type: () => String })
+  @IsOptional()
+  @IsString()
+  @Exclude({ toPlainOnly: true })
   @Column({ nullable: true })
   hash?: string;
 
-  @ApiPropertyOptional({ type: String, maxLength: 500 })
+  @ApiPropertyOptional({ type: () => String })
   @IsOptional()
-  @Column({ length: 500, nullable: true })
-  imageUrl?: string;
+  @IsString()
+  @Exclude({ toPlainOnly: true })
+  @Column({ insert: false, nullable: true })
+  public refreshToken?: string;
+
+  @ApiPropertyOptional({ type: () => String })
+  @IsOptional()
+  @IsString()
+  @Exclude({ toPlainOnly: true })
+  @Column({ insert: false, nullable: true })
+  public code?: string;
+
+  @ApiPropertyOptional({ type: () => Date })
+  @IsOptional()
+  @Exclude({ toPlainOnly: true })
+  @Column({ insert: false, nullable: true })
+  public codeExpireAt?: Date;
+
+  @ApiPropertyOptional({ type: () => Date })
+  @IsOptional()
+  @Exclude({ toPlainOnly: true })
+  @Column({ insert: false, nullable: true })
+  public emailVerifiedAt?: Date;
+
+  @ApiPropertyOptional({ type: () => String })
+  @IsOptional()
+  @Exclude({ toPlainOnly: true })
+  @Column({ insert: false, nullable: true })
+  public emailToken?: string;
+
+  name?: string;
+  isEmailVerified?: boolean;
+
+  /*
+	|--------------------------------------------------------------------------
+	| @ManyToOne
+	|--------------------------------------------------------------------------
+	*/
+
+  /**
+   * Role
+   */
+  @ManyToOne(() => Role, {
+    /** Indicates if relation column value can be nullable or not. */
+    nullable: true,
+
+    /** Database cascade action on delete. */
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn()
+  role?: IRole;
+
+  @ApiPropertyOptional({ type: () => String })
+  @IsOptional()
+  @IsUUID()
+  @RelationId((it: User) => it.role)
+  @Index()
+  @Column({ nullable: true })
+  roleId?: string;
 }

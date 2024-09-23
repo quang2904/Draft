@@ -64,4 +64,13 @@ export class RequestContext {
     }
     return null;
   }
+
+  static currentTenantId(): string {
+    try {
+      const user: IUser = RequestContext.currentUser();
+      return user.tenantId;
+    } catch (error) {
+      return null;
+    }
+  }
 }

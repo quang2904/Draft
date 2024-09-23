@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, DeleteDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { BaseEntityModel as IBaseEntityModel } from '@/contracts';
+import { IBaseEntityModel } from '@/contracts';
 import { IsBoolean, IsDateString, IsOptional } from 'class-validator';
 
 export abstract class Model {

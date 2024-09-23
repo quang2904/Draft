@@ -1,14 +1,32 @@
-import { Column, Entity } from 'typeorm';
-import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty } from 'class-validator';
-import { BaseEntity } from '@/app/core/entities/internal';
-import { IRole, RolesEnum } from '@/contracts';
+import { Column, Entity, Index, OneToMany } from 'typeorm';
+import { IRole, IRolePermission, RolesEnum } from '@/contracts';
+import { BaseEntity, RolePermission } from '@/app/core/entities/internal';
+import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty } from 'class-validator';
 
 @Entity('role')
 export class Role extends BaseEntity implements IRole {
-  @ApiPropertyOptional({ type: String, enum: RolesEnum })
-  @IsEnum(RolesEnum)
+  @ApiProperty({ type: () => String, enum: RolesEnum })
   @IsNotEmpty()
+  @Index()
   @Column()
   name: string;
+
+  @ApiProperty({ type: () => Boolean })
+  @Column()
+  isSystem: boolean;
+
+  /*
+	|--------------------------------------------------------------------------
+	| @OneToMany
+	|--------------------------------------------------------------------------
+	*/
+
+  /**
+   * Role Permissions
+   */
+  @OneToMany(() => RolePermission, (rolePermission) => rolePermission.role, {
+    cascade: true,
+  })
+  rolePermissions?: IRolePermission[];
 }

@@ -1,29 +1,3 @@
-import {
-  BaseEntity,
-  Employee,
-  EmployeeRecurringExpense,
-  EmployeeSetting,
-  Expense,
-  Income,
-  Organization,
-  OrganizationDepartment,
-  OrganizationRecurringExpense,
-  Role,
-  User,
-  UserOrganization,
-} from './internal';
+import { BaseEntity } from './internal';
 
-export const coreEntities = [
-  BaseEntity,
-  Employee,
-  EmployeeRecurringExpense,
-  EmployeeSetting,
-  Expense,
-  Income,
-  Organization,
-  OrganizationDepartment,
-  OrganizationRecurringExpense,
-  Role,
-  User,
-  UserOrganization,
-];
+export const coreEntities = [BaseEntity];
